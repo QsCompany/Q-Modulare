@@ -2,15 +2,7 @@
   "version": "1.0.7",
   "name": "@qcompany/qloader",
   "private": false,
-  "devDependencies": {
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-cssmin": "^0.2.0",
-    "gulp-htmlmin": "^4.0.0",
-    "gulp-uglify": "^3.0.1",
-    "merge-stream": "^1.0.1"
-  },
+  "devDependencies": {},
   "author": "Achour Brahim",
   "description": "Module loader for  AMD & SystemJS Libraries <br> support Assemly structure & Reflection & Self defence TECH",
   "contributors": [
