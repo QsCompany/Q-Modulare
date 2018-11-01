@@ -1,0 +1,18 @@
+﻿[
+  {
+    "inputFiles": [ "./bin/qloader.js" ],
+    "sourceMap": false,
+    "includeInProject": true,
+    "outputFileName": "./bin/qLoader.min.js",
+    "minify": {
+      "enabled": true,
+      "gzip": false,
+      "outputMode": "singleLine",
+      "renameLocals": true,
+      "termSemicolons": true,
+      "evalTreatment": "makeImmediateSafe",
+      "preserveImportantComments": false,
+      "alwaysEscapeNonAscii": true
+    }
+  }
+]
