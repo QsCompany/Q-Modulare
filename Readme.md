@@ -1,6 +1,6 @@
 # Q-Loader (اكبر منصة برمجية في العالم العربي و وإفريقيا)
 
-[![N|Solid](https://media.licdn.com/dms/image/C4D0BAQH8kTFXDENQDQ/company-logo_200_200/0?e=2159024400&v=beta&t=XHe8k3vJTNGcTpw_5S6_vzP9IfUQL2IOSEWzPRCStR8)](https://www.QDev.dz/products/QLoader)
+[![N|Solid](https://github.com/QsCompany/Q-Loader/raw/master/QDev.png)](https://www.QDev.dz/products/QLoader)
 
 QLoader is a module loader
   - AMD modules. 
