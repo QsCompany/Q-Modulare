@@ -1,4 +1,4 @@
-# Q-Loader 
+# Q-Modulare 
 
 # اكبر منصة برمجية في العالم العربي و إفريقيا
 [![N|Solid](https://github.com/QsCompany/Q-Loader/raw/master/QDev.png)](https://www.QDev.dz/products/QLoader)
