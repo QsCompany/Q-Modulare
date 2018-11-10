@@ -1,0 +1,7 @@
+{
+    "files.maxMemoryForLargeFilesMB": 200,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "files.insertFinalNewline": true,
+    "editor.autoClosingBrackets": "never"
+}

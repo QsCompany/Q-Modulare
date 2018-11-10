@@ -1,22 +1,12 @@
-﻿/// <reference path="./Module.ts" />
-declare var __extends;
-var exports: any = {};
-var __global: {
-    https: boolean,
-    supportTemplate: boolean,
-    useListenerOrMutation: boolean,
-    ApiServer?: System.basics.Url,
-    CaseSensitive: boolean;
-    GetApiAddress(url: string): string;
-} = <any>{};
-var envirenment: { isBrowser: boolean, isWebWorker: boolean, isOpera: boolean, isChromeApp: boolean, isMobile: boolean };
-var clone: (obj) => any;
-var $: (selector, context) => void;
-var $defineProperty: (o: any, p: string, attributes: PropertyDescriptor & ThisType<any>, onError?: (o: any, p: string, attributes: PropertyDescriptor & ThisType<any>) => any) => any;
-var $bench: (f: () => any, timeSpan: number) => number;
-declare var w: Window;
-((window: any) => {
-
+/// <reference path="./Module.ts" />
+var exports = {};
+var __global = {};
+var envirenment;
+var clone;
+var $;
+var $defineProperty;
+var $bench;
+(function (window) {
     function detectmob() {
         return (navigator.userAgent.match(/Android/i)
             || navigator.userAgent.match(/webOS/i)
@@ -24,8 +14,7 @@ declare var w: Window;
             || navigator.userAgent.match(/iPad/i)
             || navigator.userAgent.match(/iPod/i)
             || navigator.userAgent.match(/BlackBerry/i)
-            || navigator.userAgent.match(/Windows Phone/i)
-        );
+            || navigator.userAgent.match(/Windows Phone/i));
     }
     function bench(f, timeSpan) {
         var t = performance.now();
@@ -36,40 +25,34 @@ declare var w: Window;
         }
         return i;
     }
-
-    $defineProperty = function (o: any, p: string, attributes: PropertyDescriptor & ThisType<any>, onError: (o: any, p: string, attributes: PropertyDescriptor & ThisType<any>) => any): any {
+    $defineProperty = function (o, p, attributes, onError) {
         try {
             return Object.defineProperty(o, p, attributes);
-        } catch (e) {
+        }
+        catch (e) {
             onError && onError(o, p, attributes);
             return false;
         }
-    }
-
+    };
     function getMobileOperatingSystem() {
         var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
         // Windows Phone must come first because its UA also contains "Android"
         if (/windows phone/i.test(userAgent)) {
             return "Windows Phone";
         }
-
         if (/android/i.test(userAgent)) {
             return "Android";
         }
-
         // iOS detection from: http://stackoverflow.com/a/9039885/177710
         if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
             return "iOS";
         }
-
         return "unknown";
     }
-
     __global = {
         supportTemplate: (function supportsTemplate() { return 'content' in document.createElement('template'); })(),
         useListenerOrMutation: true,
-        GetApiAddress(url: string) {
+        GetApiAddress: function (url) {
             return __global.ApiServer ? __global.ApiServer.Combine(url).toString() : url;
         },
         CaseSensitive: false,
@@ -92,18 +75,20 @@ declare var w: Window;
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    $defineProperty(window, '__extends', { get: function () { return __extends1 }, set: function () { }, configurable: false, enumerable: false }, (o, p, a) => { __extends = __extends1; });
-    var isBrowser: boolean = isBrowser = (!!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document));
+    $defineProperty(window, '__extends', { get: function () { return __extends1; }, set: function () { }, configurable: false, enumerable: false }, function (o, p, a) { __extends = __extends1; });
+    var isBrowser = isBrowser = (!!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document));
     envirenment = {
         isBrowser: isBrowser,
         isWebWorker: !isBrowser && typeof importScripts !== 'undefined',
-        isOpera: typeof (window as any).opera !== 'undefined' && (window as any).opera.toString() === '[object Opera]',
+        isOpera: typeof window.opera !== 'undefined' && window.opera.toString() === '[object Opera]',
         isChromeApp: document.location.protocol === 'chrome-extension:',
         isMobile: !!detectmob()
     };
-    if (!__global.supportTemplate) $defineProperty(HTMLUnknownElement.prototype, 'content', { get: function () { return this; } });
+    if (!__global.supportTemplate)
+        $defineProperty(HTMLUnknownElement.prototype, 'content', { get: function () { return this; } });
     clone = function (obj) {
-        if (!obj) return obj;
+        if (!obj)
+            return obj;
         if (typeof obj === 'object') {
             var copy = obj.constructor();
             for (var attr in obj)
@@ -114,25 +99,27 @@ declare var w: Window;
         else if (obj instanceof Array)
             return obj.splice(0);
         return obj;
-    }
-
+    };
     //if ((Object.prototype as any).clone === void 0)
     //    (Object.prototype as any).clone = function (obj) {
     //        for (var i in obj)
     //            this[i] = obj[i];
     //        return this;
     //    }
-    function getScrollArea(x: Element) {
-        var h = []; var t = x; while (t) {
+    function getScrollArea(x) {
+        var h = [];
+        var t = x;
+        while (t) {
             var oy = getComputedStyle(t).overflowY;
-            if (oy == "auto") return t;
+            if (oy == "auto")
+                return t;
             t = t.parentElement;
         }
     }
-    (Element.prototype as any).getScrollArea = function () { return getScrollArea(this); };
-    (Object as any).clone = clone;
-    if ((Element.prototype as any).scrollIntoViewIfNeeded == void 0)
-        (Element.prototype as any).scrollIntoViewIfNeeded = function () {
+    Element.prototype.getScrollArea = function () { return getScrollArea(this); };
+    Object.clone = clone;
+    if (Element.prototype.scrollIntoViewIfNeeded == void 0)
+        Element.prototype.scrollIntoViewIfNeeded = function () {
             var r = this.getBoundingClientRect();
             var v = getScrollArea(this);
             if (!v) {
@@ -142,9 +129,7 @@ declare var w: Window;
             var t = document.body;
             var prRect = (v || t).getBoundingClientRect();
             var chRect = this.getBoundingClientRect();
-
             var x = new IDBDatabase();
-
             if (prRect.top - r.top > 0)
                 v.scrollTop -= prRect.top - r.top;
             else if (prRect.bottom < r.bottom)
@@ -159,34 +144,32 @@ declare var w: Window;
             //}
             //else if (chRect.bottom > prRect.bottom)
             //    v.scrollTop += chRect.top - chRect.height - prRect.top;
-        }
-    if ((String.prototype as any).endsWith === void 0)
-        (String.prototype as any).endsWith = function (suffix) {
+        };
+    if (String.prototype.endsWith === void 0)
+        String.prototype.endsWith = function (suffix) {
             return this.indexOf(suffix, this.length - suffix.length) !== -1;
         };
-    if ((String.prototype as any).startsWith === void 0)
-        (String.prototype as any).startsWith = function (suffix) {
+    if (String.prototype.startsWith === void 0)
+        String.prototype.startsWith = function (suffix) {
             return this.indexOf(suffix) === 0;
         };
-    if ((HTMLElement.prototype as any).remove === void 0) {
-        (HTMLElement.prototype as any).remove = function () {
+    if (HTMLElement.prototype.remove === void 0) {
+        HTMLElement.prototype.remove = function () {
             this.removeNode(true);
         };
     }
-    if ((HTMLElement.prototype as any).parent === void 0) {
-        (HTMLElement.prototype as any).parent = function () {
+    if (HTMLElement.prototype.parent === void 0) {
+        HTMLElement.prototype.parent = function () {
             return this.parentElement || this.parentNode;
         };
     }
-    (HTMLElement.prototype as any).insertChildAtIndex = function (v, i) {
+    HTMLElement.prototype.insertChildAtIndex = function (v, i) {
         var c = this.children.length;
         if (i < c)
             this.insertBefore(v, this.children.item(i));
         else
             this.appendChild(v);
-    }
-
-
+    };
     $ = function (selector, context) {
         var b = document.body;
         var d = document;
@@ -195,24 +178,25 @@ declare var w: Window;
         var o = context === b;
         var s = selector[0] || '';
         if (s === '#') {
-            if (o) return document.getElementById(selector.substr(1));
+            if (o)
+                return document.getElementById(selector.substr(1));
             return getElementById(selector.substr(1), context);
         }
         if (s === '.') {
-            if (o) return document.getElementsByClassName(selector.substr(1));
+            if (o)
+                return document.getElementsByClassName(selector.substr(1));
             return getElementByClassName(selector.substr(1), context);
         }
         if (s === '[')
             return getElementByAttribute(selector.substr(1, selector.length - 2), context);
-
-
-        if (o) return document.getElementsByTagName(selector);
+        if (o)
+            return document.getElementsByTagName(selector);
         return getElementByTagName(selector, context);
-    }
-
+    };
     function getElementById(id, context) {
         if (context instanceof HTMLElement) {
-            if (id === context.id) return context;
+            if (id === context.id)
+                return context;
             return _getElementById(id, context);
         }
         if (context instanceof Element)
@@ -220,47 +204,48 @@ declare var w: Window;
         return undefined;
     }
     function _getElementById(id, cntxt) {
-        const t = new Array(1000);
+        var t = new Array(1000);
         t[0] = cntxt;
         var it = 0;
         while (it >= 0) {
             var root = t[it--];
             for (var i = 0, l = root.children.length; i < l; i++) {
                 var child = root.children[i];
-                if (child.id === id) return child;
+                if (child.id === id)
+                    return child;
                 if (child instanceof HTMLElement)
                     t[++it] = child;
             }
         }
     }
-
     function getElementByTagName(tag, context) {
         tag = tag.toUpperCase();
         if (context instanceof HTMLElement)
             return _getElementByTagName(tag, context);
-
         if (context instanceof Element)
             return context.tagName === tag ? [context] : [];
         return [];
     }
     function _getElementByTagName(tag, cntxt) {
         var t = new Array(1000);
-        if (tag === cntxt.tagName) var ret = [cntxt];
-        else ret = [];
+        if (tag === cntxt.tagName)
+            var ret = [cntxt];
+        else
+            ret = [];
         t[0] = cntxt;
         var it = 0;
         while (it >= 0) {
             var root = t[it--];
             for (var i = 0, l = root.children.length; i < l; i++) {
                 var child = root.children[i];
-                if (child.tagName === tag) ret.push(child);
+                if (child.tagName === tag)
+                    ret.push(child);
                 if (child instanceof HTMLElement)
                     t[++it] = child;
             }
         }
         return ret;
     }
-
     function getElementByClassName(tag, context) {
         if (context instanceof HTMLElement)
             return _getElementByClassName(tag, context);
@@ -272,8 +257,10 @@ declare var w: Window;
         var t = new Array(1000);
         t[0] = cntxt;
         var it = 0;
-        if (cntxt.classList.contains(tag)) var ret = [cntxt];
-        else ret = [];
+        if (cntxt.classList.contains(tag))
+            var ret = [cntxt];
+        else
+            ret = [];
         while (it >= 0) {
             var root = t[it--];
             for (var i = 0, l = root.children.length; i < l; i++) {
@@ -286,39 +273,37 @@ declare var w: Window;
         }
         return ret;
     }
-
     function getElementByAttribute(tag, context) {
         if (context instanceof HTMLElement)
             return _getElementByAttribute(tag, context);
-
         if (context instanceof Element)
             return context.hasAttribute(tag) ? [context] : [];
         return [];
     }
     function _getElementByAttribute(tag, cntxt) {
         var t = new Array(1000);
-        if (cntxt.hasAttribute(tag)) var ret = [cntxt];
-        else ret = [];
+        if (cntxt.hasAttribute(tag))
+            var ret = [cntxt];
+        else
+            ret = [];
         t[0] = cntxt;
         var it = 0;
         while (it >= 0) {
             var root = t[it--];
             for (var i = 0, l = root.children.length; i < l; i++) {
                 var child = root.children[i];
-                if (child.hasAttribute(tag)) ret.push(child);
+                if (child.hasAttribute(tag))
+                    ret.push(child);
                 if (child instanceof HTMLElement)
                     t[++it] = child;
             }
         }
         return ret;
     }
-
-
     if (!DocumentFragment.prototype.hasOwnProperty('firstElementChild'))
         $defineProperty(DocumentFragment.prototype, 'firstElementChild', {
             get: function () {
                 var c = this.children || this.childNodes;
-
                 for (var i = 0; i < c.length; i++)
                     if (c[i] instanceof Element)
                         return c[i];
@@ -326,8 +311,6 @@ declare var w: Window;
             },
             configurable: false
         });
-
-
     function test(fn, iter) {
         var t = Date.now();
         iter = iter || 200000;
@@ -336,14 +319,11 @@ declare var w: Window;
         }
         return Date.now() - t;
     }
-
     if (typeof DOMParser === 'undefined')
         window.DOMParser = function DOMParser() {
             this.parseFromString = function (markup, type) {
                 if (/^\s*text\/html\s*(?:;|$)/i.test(type)) {
-                    var
-                        doc = document.implementation.createHTMLDocument("")
-                        ;
+                    var doc = document.implementation.createHTMLDocument("");
                     if (markup.toLowerCase().indexOf('<!doctype') > -1) {
                         doc.documentElement.innerHTML = markup;
                     }
@@ -351,28 +331,23 @@ declare var w: Window;
                         doc.body.innerHTML = markup;
                     }
                     return doc;
-                } else {
-                    return (window as any).DOMParser.prototype.nativeParse.apply(this, arguments);
+                }
+                else {
+                    return window.DOMParser.prototype.nativeParse.apply(this, arguments);
                 }
             };
             (function (DOMParser) {
                 "use strict";
-
-                var proto = DOMParser.prototype,
-                    nativeParse = proto.parseFromString;
-
-
+                var proto = DOMParser.prototype, nativeParse = proto.parseFromString;
                 try {
                     if ((new DOMParser()).parseFromString("", "text/html")) {
                         return;
                     }
-                } catch (ex) { }
-
+                }
+                catch (ex) { }
                 proto.parseFromString = function (markup, type) {
                     if (/^\s*text\/html\s*(?:;|$)/i.test(type)) {
-                        var
-                            doc = document.implementation.createHTMLDocument("")
-                            ;
+                        var doc = document.implementation.createHTMLDocument("");
                         if (markup.toLowerCase().indexOf('<!doctype') > -1) {
                             doc.documentElement.innerHTML = markup;
                         }
@@ -380,41 +355,42 @@ declare var w: Window;
                             doc.body.innerHTML = markup;
                         }
                         return doc;
-                    } else {
+                    }
+                    else {
                         return nativeParse.apply(this, arguments);
                     }
                 };
-            })(DOMParser)
+            })(DOMParser);
         };
-
     var s;
     window.stop = function stop() {
         if (s)
             debugger;
-    }
+    };
     if (envirenment.isChromeApp) {
         var str = {};
-        window.localStorage = <Storage>{
-            key(i: number) { return Object.keys(str)[i]; },
-            clear(callback?: (k: string, v: string) => void) {
-                (chrome.storage.local.clear as any)(callback);
+        window.localStorage = {
+            key: function (i) { return Object.keys(str)[i]; },
+            clear: function (callback) {
+                chrome.storage.local.clear(callback);
             },
-            getItem(k: string, callback?: (k: string, v: string) => void) {
-                (chrome.storage.local.get as any)(k, callback);
+            getItem: function (k, callback) {
+                chrome.storage.local.get(k, callback);
                 return str[k];
             },
             get length() { return Object.keys(str).length; },
-            setItem(k: string, v: string, callback?: (k: string, v: string) => void) {
+            setItem: function (k, v, callback) {
                 str[k] = v;
-                var x = {}; x[k] = v;
-                (chrome.storage.local.set as any)(x, callback);
+                var x = {};
+                x[k] = v;
+                chrome.storage.local.set(x, callback);
             },
-            removeItem(k: string, callback?: (k: string, v: string) => void) {
+            removeItem: function (k, callback) {
                 delete str[k];
                 str[k] = void 0;
-                (chrome.storage.local as any).remove(k, callback);
+                chrome.storage.local.remove(k, callback);
             }
-        }
+        };
     }
     else if (typeof localStorage === 'undefined') {
         var str = {};
@@ -422,18 +398,9 @@ declare var w: Window;
             setItem: function (a, b) { str[a] = b; },
             getItem: function (a) { return str[a]; },
             clear: function () { },
-            key: function (i: number) { return str[i]; },
+            key: function (i) { return str[i]; },
             length: 0,
-            removeItem: (a) => { }
+            removeItem: function (a) { }
         };
     }
-
 })(window);
-
-declare class Map {
-    new();
-    get(key): any;
-    set(key, value);
-    delete(key);
-}
-declare var chrome: { storage: { local: { get, set, clear, remove } } };

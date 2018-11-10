@@ -1,0 +1,26 @@
+{
+  "version": "1.0.7",
+  "name": "@qcompany/qloader",
+  "private": false,
+  "devDependencies": {},
+  "author": "Achour Brahim",
+  "description": "Module loader for  AMD & SystemJS Libraries <br> support Assemly structure & Reflection & Self defence TECH",
+  "contributors": [
+    {
+      "name": "Achour Brahim",
+      "email": "Ammi.Said@outlook.com",
+      "url": "https://www.QComapny.dz"
+    },
+    {
+      "name": "Achour Brahim",
+      "email": "Ammi.Said.Kaidi@gmail.com",
+      "url": "https://www.QComapny.dz"
+    }
+  ],
+  "files": [
+    "QLoader.min.js"
+  ],
+  "main": "QLoader.min.js",
+  "license": "QCompanyTech",
+  "repository": "git@github.comQsCompany/Q-Loader.git"
+}

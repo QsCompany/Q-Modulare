@@ -11,6 +11,9 @@ interface IContext {
     OnGStat(stat: ModuleStat, callback: (me: string, target: string, cstat: ModuleStat, stat: ModuleStat) => void): any;
     SetSuperVisor(callback: (url: IUrl) => boolean);
     Assemblies: any;
+
+    ExecuteModule(success: boolean);
+    HandleExecution();
 }
 interface IEnum {
     [n: string]: number;
@@ -30,6 +33,9 @@ declare module "context" {
     export function OnGStat(stat: ModuleStat, callback: (me: string, target: string, cstat: ModuleStat, stat: ModuleStat) => void): any;
     export function SetSuperVisor(callback: (url: IUrl) => boolean);
     export var Assemblies: any;
+
+    function ExecuteModule(success: boolean);
+    function HandleExecution();
 }
 declare interface ITemplateModule {
     get(name: string): HTMLTemplateElement;

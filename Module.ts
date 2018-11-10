@@ -28,7 +28,7 @@ enum ModuleExt {
     svg = ModuleType.style,
     ico = ModuleType.style,
     css = ModuleType.style,
-    none=ModuleType.none
+    none = ModuleType.none
 }
 
 enum ModuleStat {
@@ -42,11 +42,9 @@ enum ModuleStat {
     Failed = 7,
     Forbidden = 111
 }
-
-
 namespace System {
     var $clone = function (_this, from) {
-        if (from==null) return _this;
+        if (from == null) return _this;
         if (_this == null) _this = {};
         for (var i in from) {
             _this[i] = from[i];
@@ -91,8 +89,8 @@ namespace System {
                     if (this._path[i] != url._path[i]) return false;
                 return true;
             }
-            private _directory:Url;
-            get Directory():Url {
+            private _directory: Url;
+            get Directory(): Url {
                 return this._directory || (this._directory = new Url(this.getDirectory()));
             }
             get ParentDirectory() {
@@ -111,7 +109,7 @@ namespace System {
             }
             PluginName: string;
             private _path: string[];
-            getmoduleType(_default?:ModuleType): ModuleType {
+            getmoduleType(_default?: ModuleType): ModuleType {
                 if (this.IsFolder) return ModuleType.folder;
                 var e = this.ext;
                 if (e == null || e == "") return typeof _default === 'number' ? _default : ModuleType.none;
@@ -193,7 +191,7 @@ namespace System {
                     url = url.toLowerCase();
                 return url;
             }
-            
+
             private init(url: string) {
                 url = this.getUrl(url.trim());
                 this._directory = null;
@@ -243,15 +241,15 @@ namespace System {
                 this.host = s === -1 ? url : url.substr(0, s);
                 this.path = s === -1 ? [""] : url.substr(s + 1).split('/');
             }
-            getFullHost(url: string):void {
+            getFullHost(url: string): void {
                 var i = url.indexOf('://');
                 var pi = url.indexOf('/');
-                this._isContextual = i == -1 && pi != 0 && url[0] != '.';                
+                this._isContextual = i == -1 && pi != 0 && url[0] != '.';
                 if (i === -1 || pi < i) {
                     this.path = url.split('/');
                     if (pi === 0)
                         this.path.shift(),
-                        this.host = '/';
+                            this.host = '/';
                 }
                 else {
                     var s = url.indexOf('/', i + 3);
@@ -328,15 +326,15 @@ namespace System {
                 return c;
             }
             static getUrl(path: string[], name?: string, rooted?: boolean) {
-                if (rooted) path.unshift('.');                
+                if (rooted) path.unshift('.');
                 return new Url(path.join('/') + '/' + (name ? name : ""));
             }
             public getRelativePath() {
                 if (!this.IsExternal) return this;
                 var root = new Url(document.URL);
                 if (!this.SameHostAs(this)) return this;
-                if(this.IsRooted)
-                if (root._path.length === 0) return Url.getUrl(this._path, this.getEName(), true);
+                if (this.IsRooted)
+                    if (root._path.length === 0) return Url.getUrl(this._path, this.getEName(), true);
                 var min_l = Math.min(this._path.length, root._path.length);
                 for (var i = 0; i < min_l; i++) {
                     if (root._path[i] === this.path[i]) continue;
@@ -347,7 +345,7 @@ namespace System {
                 function repeat1(s: string, count: number) {
                     var r = [];
                     for (var i = 0; i < count; i++)
-                         r.push(s);
+                        r.push(s);
                     return r;
                 }
             }
@@ -736,7 +734,7 @@ namespace System {
                 return config.Module.NameOf(type);
             }
 
-            GetType(path:string) {
+            GetType(path: string) {
                 if (path == null) return null;
                 const config = _store[this['Id']];
                 return config.Module.GGetType(path);
@@ -779,6 +777,15 @@ namespace System {
                 const config = _store[this['Id']];
                 config.Module.RootFolder.SuperVisor = callback;
             }
+            HandleExecution() {
+                const config = _store[this['Id']];
+                config.Module._executedHandled = true;
+            }
+            ExecuteModule(success: boolean) {
+                const config = _store[this['Id']];
+                config.Module._executedHandled = false;
+                config.Module.Stat = success ? ModuleStat.Executed : ModuleStat.Failed;
+            }
         }
 
         $defineProperty(Context.prototype, '__extends', { value: window['__extends'], writable: false, configurable: false, enumerable: false });
@@ -789,7 +796,7 @@ namespace System {
             Owner?: any;
             callback: (m: Module, e: IModuleOnExecuted) => void;
         }
-        
+
 
         export class Module {
             _stat: ModuleStat = ModuleStat.New;
@@ -811,7 +818,7 @@ namespace System {
             get ResourceUrl(): basics.Url {
                 return new basics.Url(this.FullName).setDefaultType(ModuleType.code);
             }
-            
+
             public get FolderContext() {
                 return this._folderContext || this.Folder;
             }
@@ -836,11 +843,11 @@ namespace System {
                 return callback ? (context == null ? callback(toGet.exports) : callback.call(context, toGet.exports)) : toGet.exports;
             }
 
-            require(modulePath:string, callback: (m: Exports) => void, onerror?, context?) {
+            require(modulePath: string, callback: (m: Exports) => void, onerror?, context?) {
                 var u = new basics.Url(modulePath);
                 return (u.IsPlugin ? this.Folder : this.FolderContext)._require(modulePath, callback, onerror, context);
             }
-            loadLib(d: string, isOtional: (v: boolean)=> boolean): Assembly {
+            loadLib(d: string, isOtional: (v: boolean) => boolean): Assembly {
                 var c = d.indexOf('|');
                 var alias = d.substr(0, c);
                 var path = d.substr(c + 1);
@@ -854,7 +861,7 @@ namespace System {
                     v.callback.call(v.Owner, this, v);
                 else this._onExecuted.push(v);
             }
-            
+
             public checkOverflow() {
                 var r = [];
                 Module.checkOverflow(this, this, r, []);
@@ -915,7 +922,7 @@ namespace System {
                 if (!global) {
                     let c: any = dic.getkey(path);
                     if (c != null) return c;
-                    c = root .getRadical().GetEnum(path.split('.'));
+                    c = root.getRadical().GetEnum(path.split('.'));
                     if (c === undefined) return undefined;
                     dic.set(c, path);
                     return c;
@@ -1008,8 +1015,11 @@ namespace System {
             get Stat() {
                 return this._stat;
             }
+            _executedHandled: boolean;
 
             set Stat(v) {
+                if (this._executedHandled && v == ModuleStat.Executed)
+                    return;
                 if (v == this._stat)
                     return;
                 if (v < this._stat) return;
@@ -1040,7 +1050,7 @@ namespace System {
                     this._fn = this.Folder.FullName + this.EName;
                 return this._fn;
             }
-            static loadEntryPoint(src?:HTMLScriptElement) {
+            static loadEntryPoint(src?: HTMLScriptElement) {
                 var scr = src || document.currentScript;
                 const app = scr.getAttribute('entry-point');
                 if (app != undefined) {
@@ -1085,8 +1095,49 @@ namespace System {
                 return (!url.IsContextual || this.Url.isAsset ? this.Folder : this.FolderContext).GetModule(url);
             }
 
+            public static __require(m: Module, d: string): { mdl: Module, isOptional: boolean } {
+                var mdl;
+                var isOptional = false;
+                switch (d) {
+                    case 'exports':
+                        mdl = m.exports;
+                        break;
+                    case 'define':
+                        mdl = { define: m.Folder.define };
+                        break;
+                    case 'require':
+                        mdl = m.require;
+                        break;
+                    case 'context':
+                        mdl = m._thisContext;
+                        break;
+                    case 'loadLib':
+                        isOptional = true;
+                        mdl = m.loadLib;
+                        break;
+                    default:
+                        if (d.indexOf('plugin|') === 0) {
+                            var x = moduleDownloader.get(d.substr(7));
+                            if (x) mdl = x;
+                            else mdl = null;
+                        } else if (d.indexOf('lib:') == 0) {
+                            var c = d.indexOf('|');
+                            var alias = d.substr(4, c - 4);
+                            var path = d.substr(c + 1);
+                            if ((isOptional = path.indexOf('*') == 0)) path = path.substr(1);
+                            mdl = m.RootFolder.LoadAssembly(m.Folder, path, alias);
+                        }
+                        else {
+                            if ((isOptional = d.indexOf('*') == 0)) d = d.substr(1);
+                            mdl = m.GetModule(d);
+                        }
+                        break;
+                }
+                return { mdl, isOptional };
+            }
+
         }
-        
+
         class Folder {
             public LoadAssemblyByUrl(url: basics.Url) {
                 if (!url.IsPlugin) throw "";
@@ -1107,8 +1158,6 @@ namespace System {
                 while (!(t instanceof Assembly)) t = t.Parent;
                 return t;
             }
-
-
             public GetFolder(url: basics.Url, see?: boolean) {
                 if (!url) return this;
                 var path = url.path;
@@ -1128,6 +1177,10 @@ namespace System {
             public GetModule(url: basics.Url | string) {
                 if (typeof url === 'string')
                     url = new basics.Url(url);
+                if (url.IsPlugin && url.PluginName.toLowerCase() === "plugin") {
+                    return moduleDownloader.get(url.moduleName) as any;
+
+                }
                 if (url.IsFolder) throw "Invalid FileName Path :" + url.FullPath;
                 url.setDefaultType(ModuleType.code);
                 var folder = this.GetFolder(url);
@@ -1173,7 +1226,7 @@ namespace System {
                 return this._fn;
             }
             createPath(modulePath: string[], see?: boolean): Folder {
-                return Folder.CreatePath(modulePath, this,see);
+                return Folder.CreatePath(modulePath, this, see);
             }
             public NafigateTo(pathString: string) {
                 var path = new basics.Url(pathString);
@@ -1352,7 +1405,7 @@ namespace System {
                         module.OnExecuted = { callback: function (d) { this.call(d, callback, onerror, context); }, Owner: this };
                         moduleDownloader.Download(module);
                     }
-                    return null;
+                    return module;
                 }
             }
 
@@ -1384,14 +1437,14 @@ namespace System {
                     return this.Parent.getRooteOfTemplate(s, parsed);
             }
 
-            
+
             ConvertToAssembly(alias: string, url: basics.Url): Assembly {
                 if (this instanceof Assembly) return this;
                 var c = new Assembly(alias, url);
                 return c.Replace(this, null);
             }
 
-            Replace(f: Folder,parentAssembly:Assembly): this {
+            Replace(f: Folder, parentAssembly: Assembly): this {
                 if (!f)
                     if (!parentAssembly) throw "unvalid arguments";
                     else p = parentAssembly;
@@ -1469,7 +1522,7 @@ namespace System {
                     x.collectAssets(t, c);
                 }
             }
-            get Stat() { return this._stat;}
+            get Stat() { return this._stat; }
             private entryPoint: Module;
             private resourceUrl: basics.Url;
             private Assemblies: Assemblies = new Assemblies();
@@ -1514,11 +1567,11 @@ namespace System {
             }
 
             public Register(assemby: Assembly) {
-                var f = this.subFolders._store[assemby.Name];                
+                var f = this.subFolders._store[assemby.Name];
                 if (f instanceof Assembly)
                     if (f !== assemby) throw "unvalid stat";
                     else return;
-                else {                    
+                else {
                     var c = assemby.Replace(f, this);
                     this.Assemblies.setAssembly(assemby);
                     return c;
@@ -1582,7 +1635,7 @@ namespace System {
                 else managers.CodeManager.loadDependencies(m, depen, callback);
             }
             private modulePrototypes: ModulePrototype[] = [];
-            private loadLibs(m:Module,dependencies: string[], callback: Function) {
+            private loadLibs(m: Module, dependencies: string[], callback: Function) {
                 var ass = m.RootFolder;
                 var isOptional;
                 for (let i = 0, l = dependencies.length; i < l; i++) {
@@ -1602,9 +1655,9 @@ namespace System {
                 if (this.pending != 0) return;
                 this.OnAssemblyExecuted();
             }
-            
+
             private CreateEntryPoint(url: basics.Url) {
-                var folder= this.GetFolder(url.Directory,false);
+                var folder = this.GetFolder(url.Directory, false);
                 var module: Module;
                 (folder as this).Modules.setModule(module = new Module(folder, url, this));
                 return module;
@@ -1695,7 +1748,7 @@ namespace System {
             _store: { [s: string]: Assembly } = {};
             constructor() {
             }
-            getAssembly(alias:string) {
+            getAssembly(alias: string) {
                 return this._store[alias];
             }
 
@@ -1745,7 +1798,7 @@ namespace System {
 
 
         class Dependency {
-            constructor(public Args: Args, public module: Module|Assembly | Exports | Context | IModuleManager<any, any>, public Index: number) {
+            constructor(public Args: Args, public module: Module | Assembly | Exports | Context | IModuleManager<any, any>, public Index: number) {
             }
         }
 
@@ -1775,7 +1828,7 @@ namespace System {
                 Module.args = this;
                 args.push(this);
             }
-            createDependency(module: Module | Exports | Context|Assembly | IModuleManager<any, any>, index: number, isOptional?: boolean) {
+            createDependency(module: Module | Exports | Context | Assembly | IModuleManager<any, any>, index: number, isOptional?: boolean) {
                 const t = new Dependency(this, module, index);
                 this.Dependencies[index] = t;
                 if (module instanceof Assembly) {
@@ -1818,7 +1871,7 @@ namespace System {
                 }
             }
             populateArgs() {
-                const _: (Exports|ilib | Assembly | IModuleManager<any, any> | Context)[] = new Array(this.Dependencies.length);
+                const _: (Exports | ilib | Assembly | IModuleManager<any, any> | Context)[] = new Array(this.Dependencies.length);
                 const $ = this.Dependencies;
                 for (let i = 0, l = $.length; i < l; i++) {
                     const m = $[i].module;
@@ -1911,7 +1964,7 @@ namespace System {
             moduleDownloader = new ModuleDownoader();
             global = new Assembly("/", new basics.Url("//"));
             var x = basics.Url.rootUrl.path.slice();
-            x.unshift(basics.Url.rootUrl.host);            
+            x.unshift(basics.Url.rootUrl.host);
             var rt = basics.Url.rootUrl;
             if (!rt.IsFolder) rt = rt.Directory;
             root = new Assembly(x.join('/'), rt);
@@ -2215,7 +2268,7 @@ namespace System {
         namespace managers {
             $defineProperty(window, 'define', { get: () => { return CodeManager.define; }, set: (v) => { }, configurable: false, enumerable: false });
             $defineProperty(window, 'require', { get: () => { return CodeManager._current && CodeManager._current.module.require || root.require; }, set: (v) => { }, configurable: false, enumerable: false });
-            
+
             abstract class Plugins<T, P> implements IModuleManager<T, P> {
                 protected _avaibleEvents: string[];
                 moduleType: ModuleType;
@@ -2335,8 +2388,7 @@ namespace System {
                     }
                     if (typeof args[0] === 'string')
                         Folder.prototype.define.apply(module.Folder, args);
-                    else if (args[0] instanceof Array)
-                    {
+                    else if (args[0] instanceof Array) {
                         module._folderContext = module.Folder;
                         CodeManager.asyncLoadDependencies(module, args[0], args[1]);
                     }
@@ -2377,7 +2429,7 @@ namespace System {
                 }
                 public static getUrls() {
                     var ret = [];
-                    var c = document.head.firstChild;
+                    var c = document.head.firstChild as Node;
                     do {
                         if (c instanceof HTMLScriptElement && (c.src || "").trim() != "") {
                             ret.push(c.src);
@@ -2403,50 +2455,92 @@ namespace System {
                     const args = new Args(m, callback);
                     for (let i = 0, l = dependencies.length; i < l; i++) {
                         let d = dependencies[i];
-                        var mdl;
-                        var isOptional = false;
-                        switch (d) {
-                            case 'exports':
-                                mdl = m.exports;
-                                break;
-                            case 'define':
-                                mdl = { define: m.Folder.define };
-                                break;
-                            case 'require':
-                                mdl = m.require;
-                                break;
-                            case 'context':
-                                mdl = m._thisContext;
-                                break;
-                            case 'loadLib':
-                                isOptional = true;
-                                mdl = m.loadLib;
-                                break;
-                            default:
-                                if (d.indexOf('plugin|') === 0) {
-                                    var x = moduleDownloader.get(d.substr(7));
-                                    if (x) mdl = x;
-                                    else mdl = null;
-                                } else if (d.indexOf('lib:') == 0) {
-                                    var c = d.indexOf('|');
-                                    var alias = d.substr(4, c - 4);
-                                    var path = d.substr(c + 1);
-                                    if ((isOptional = path.indexOf('*') == 0)) path = path.substr(1);
-                                    mdl = m.RootFolder.LoadAssembly(m.Folder, path, alias);
-                                }
-                                else {
-                                    if ((isOptional = d.indexOf('*') == 0)) d = d.substr(1);
-                                    mdl = m.GetModule(d);
-                                }
-                                break;
-                        }
+
+                        //var isOptional = false;
+                        var { mdl, isOptional } = Module.__require(m, d);// CodeManager.__require(m, d)
+
+                        // switch (d) {
+                        //     case 'exports':
+                        //         mdl = m.exports;
+                        //         break;
+                        //     case 'define':
+                        //         mdl = { define: m.Folder.define };
+                        //         break;
+                        //     case 'require':
+                        //         mdl = m.require;
+                        //         break;
+                        //     case 'context':
+                        //         mdl = m._thisContext;
+                        //         break;
+                        //     case 'loadLib':
+                        //         isOptional = true;
+                        //         mdl = m.loadLib;
+                        //         break;
+                        //     default:
+                        //         if (d.indexOf('plugin|') === 0) {
+                        //             var x = moduleDownloader.get(d.substr(7));
+                        //             if (x) mdl = x;
+                        //             else mdl = null;
+                        //         } else if (d.indexOf('lib:') == 0) {
+                        //             var c = d.indexOf('|');
+                        //             var alias = d.substr(4, c - 4);
+                        //             var path = d.substr(c + 1);
+                        //             if ((isOptional = path.indexOf('*') == 0)) path = path.substr(1);
+                        //             mdl = m.RootFolder.LoadAssembly(m.Folder, path, alias);
+                        //         }
+                        //         else {
+                        //             if ((isOptional = d.indexOf('*') == 0)) d = d.substr(1);
+                        //             mdl = m.GetModule(d);
+                        //         }
+                        //         break;
+                        // }
                         args.createDependency(mdl, i, isOptional);
                     }
                     m.Stat = ModuleStat.Defined;
                     args.Invoke();
                 }
+                public static __require(m: Module, d: string): { mdl: Module, isOptional: boolean } {
+                    var mdl;
+                    var isOptional = false;
+                    switch (d) {
+                        case 'exports':
+                            mdl = m.exports;
+                            break;
+                        case 'define':
+                            mdl = { define: m.Folder.define };
+                            break;
+                        case 'require':
+                            mdl = m.require;
+                            break;
+                        case 'context':
+                            mdl = m._thisContext;
+                            break;
+                        case 'loadLib':
+                            isOptional = true;
+                            mdl = m.loadLib;
+                            break;
+                        default:
+                            if (d.indexOf('plugin|') === 0) {
+                                var x = moduleDownloader.get(d.substr(7));
+                                if (x) mdl = x;
+                                else mdl = null;
+                            } else if (d.indexOf('lib:') == 0) {
+                                var c = d.indexOf('|');
+                                var alias = d.substr(4, c - 4);
+                                var path = d.substr(c + 1);
+                                if ((isOptional = path.indexOf('*') == 0)) path = path.substr(1);
+                                mdl = m.RootFolder.LoadAssembly(m.Folder, path, alias);
+                            }
+                            else {
+                                if ((isOptional = d.indexOf('*') == 0)) d = d.substr(1);
+                                mdl = m.GetModule(d);
+                            }
+                            break;
+                    }
+                    return { mdl, isOptional };
+                }
             }
-            
+
             (CodeManager.define as any).amd = {};
 
             export class StyleManager extends Plugins<HTMLLinkElement, StyleSheet> {
@@ -2483,10 +2577,10 @@ namespace System {
                     m.Stat = ModuleStat.Defined;
                     try {
                         e.eData = s.sheet;
-                        $clone(m.exports,{
+                        $clone(m.exports, {
                             sheet: s.sheet,
                             dom: s
-                        });                        
+                        });
                         m.Stat = e.error ? ModuleStat.Failed : ModuleStat.Executed;
                         e.OnOperationDone && e.OnOperationDone(e, OperationPhase.Downloader);
                     } catch (e) {
@@ -2642,7 +2736,7 @@ namespace System {
     }
     var global: core.Assembly;
     var root: core.Assembly;
-    var Qrc: {  };
+    var Qrc: {};
     var http: net.Downloader;
     var OnModuleCreated: Array<any>;
     var _listeners: Array<any>;
